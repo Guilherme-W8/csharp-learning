@@ -20,9 +20,31 @@ namespace CompanyAPI.Services.Entrepreneur
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurById(int entrepreneurID)
+        public async Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurById(int entrepreneurID)
         {
-            throw new NotImplementedException();
+            ResponseModel<EntrepreneurModel> response = new ResponseModel<EntrepreneurModel>();
+
+            try
+            {
+                var entrepreneur = await _context.Entrepreneurs.FirstOrDefaultAsync(entrepreneurDabase => entrepreneurDabase.Id == entrepreneurID);
+
+                if (entrepreneur == null)
+                {
+                    response.Message = "No register returned";
+                    return response;
+                }
+
+                response.Data = entrepreneur;
+                response.Message = "Entrepreneur returned successfully";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public async Task<ResponseModel<List<EntrepreneurModel>>> ListEntrepreneurs()

@@ -15,9 +15,33 @@ namespace CompanyAPI.Services.Entrepreneur
         {
             _context = context;
         }
-        public Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurByCompanyId(int companyID)
+        public async Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurByCompanyId(int companyID)
         {
-            throw new NotImplementedException();
+            ResponseModel<EntrepreneurModel> response = new ResponseModel<EntrepreneurModel>();
+
+            try
+            {
+                var company = await _context.Companies
+                .Include(e => e.Entrepreneur)
+                .FirstOrDefaultAsync(companyDatabase => companyDatabase.Id == companyID);
+
+                if (company == null)
+                {
+                    response.Message = "No register returned";
+                    return response;
+                }
+
+                response.Data = company.Entrepreneur;
+                response.Message = "Entrepreneur successfully returned";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public async Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurById(int entrepreneurID)

@@ -31,5 +31,13 @@ namespace CompanyAPI.Controllers
             var entrepreneur = await _entrepreneurInterface.FindEntrepreneurById(entrepreneurID);
             return Ok(entrepreneur);
         }
+
+
+        [HttpGet("FindEntrepreneurByCompanyId/{companyID}")]
+        public async Task<ActionResult<ResponseModel<EntrepreneurModel>>> FindEntrepreneurByCompanyId(int companyID)
+        {
+            var entrepreneur = await _entrepreneurInterface.FindEntrepreneurByCompanyId(companyID);
+            return Ok(entrepreneur);
+        }
     }
 }

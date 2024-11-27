@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CompanyAPI.DTO.Entrepreneur;
 using CompanyAPI.Models;
 using CompanyAPI.Services.Entrepreneur;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,13 @@ namespace CompanyAPI.Controllers
         {
             var entrepreneur = await _entrepreneurInterface.FindEntrepreneurByCompanyId(companyID);
             return Ok(entrepreneur);
+        }
+
+        [HttpPost("CreateEntrepreneur")]
+        public async Task<ActionResult<ResponseModel<EntrepreneurModel>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO)
+        {
+            var entrepreneurs = await _entrepreneurInterface.CreateEntrepreneur(entrepreneurDTO);
+            return Ok(entrepreneurs);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CompanyAPI.DTO.Entrepreneur;
 using CompanyAPI.Models;
 
 namespace CompanyAPI.Services.Entrepreneur
@@ -11,5 +12,6 @@ namespace CompanyAPI.Services.Entrepreneur
         Task<ResponseModel<List<EntrepreneurModel>>> ListEntrepreneurs();
         Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurById(int entrepreneurID);
         Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurByCompanyId(int companyID);
+        Task<ResponseModel<List<EntrepreneurModel>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO);
     }
 }

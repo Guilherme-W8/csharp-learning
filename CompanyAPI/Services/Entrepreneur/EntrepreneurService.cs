@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CompanyAPI.Data;
+using CompanyAPI.DTO.Entrepreneur;
 using CompanyAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,35 @@ namespace CompanyAPI.Services.Entrepreneur
         {
             _context = context;
         }
+
+        public async Task<ResponseModel<List<EntrepreneurModel>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO)
+        {
+            var response = new ResponseModel<List<EntrepreneurModel>>();
+
+            try
+            {
+                var entrepreneur = new EntrepreneurModel()
+                {
+                    Name = entrepreneurDTO.Name,
+                    Surname = entrepreneurDTO.Surname
+                };
+
+                _context.Add(entrepreneur);
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Entrepreneurs.ToListAsync();
+                response.Message = "Created";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
+        }
+
         public async Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurByCompanyId(int companyID)
         {
             ResponseModel<EntrepreneurModel> response = new ResponseModel<EntrepreneurModel>();

@@ -33,7 +33,6 @@ namespace CompanyAPI.Controllers
             return Ok(entrepreneur);
         }
 
-
         [HttpGet("FindEntrepreneurByCompanyId/{companyID}")]
         public async Task<ActionResult<ResponseModel<EntrepreneurModel>>> FindEntrepreneurByCompanyId(int companyID)
         {
@@ -42,9 +41,23 @@ namespace CompanyAPI.Controllers
         }
 
         [HttpPost("CreateEntrepreneur")]
-        public async Task<ActionResult<ResponseModel<EntrepreneurModel>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO)
+        public async Task<ActionResult<ResponseModel<List<EntrepreneurModel>>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO)
         {
             var entrepreneurs = await _entrepreneurInterface.CreateEntrepreneur(entrepreneurDTO);
+            return Ok(entrepreneurs);
+        }
+
+        [HttpPut("EditEntrepreneur")]
+        public async Task<ActionResult<ResponseModel<List<EntrepreneurModel>>>> EditEntrepreneur(EditEntrepreneurDTO editEntrepreneurDTO)
+        {
+            var entrepreneurs = await _entrepreneurInterface.EditEntrepreneur(editEntrepreneurDTO);
+            return Ok(entrepreneurs);
+        }
+
+        [HttpDelete("RemoveEntrepreneur")]
+        public async Task<ActionResult<ResponseModel<List<EntrepreneurModel>>>> RemoveEntrepreneur(int entrepreneurID)
+        {
+            var entrepreneurs = await _entrepreneurInterface.RemoveEntrepreneur(entrepreneurID);
             return Ok(entrepreneurs);
         }
     }

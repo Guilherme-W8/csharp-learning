@@ -13,5 +13,7 @@ namespace CompanyAPI.Services.Entrepreneur
         Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurById(int entrepreneurID);
         Task<ResponseModel<EntrepreneurModel>> FindEntrepreneurByCompanyId(int companyID);
         Task<ResponseModel<List<EntrepreneurModel>>> CreateEntrepreneur(CreateEntrepreneurDTO entrepreneurDTO);
+        Task<ResponseModel<List<EntrepreneurModel>>> EditEntrepreneur(EditEntrepreneurDTO editEntrepreneurDTO);
+        Task<ResponseModel<List<EntrepreneurModel>>> RemoveEntrepreneur(int entrepreneurID);
     }
 }

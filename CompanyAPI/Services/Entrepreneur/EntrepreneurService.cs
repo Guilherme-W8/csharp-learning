@@ -147,9 +147,39 @@ namespace CompanyAPI.Services.Entrepreneur
                 return response;
             }
         }
-        public Task<ResponseModel<List<EntrepreneurModel>>> EditEntrepreneur(EditEntrepreneurDTO editEntrepreneurDTO)
+        public async Task<ResponseModel<List<EntrepreneurModel>>> EditEntrepreneur(EditEntrepreneurDTO editEntrepreneurDTO)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<EntrepreneurModel>>();
+
+            try
+            {
+                var entrepreneur = await _context.Entrepreneurs
+                .FirstOrDefaultAsync(entrepreneurDatabase => entrepreneurDatabase.Id == editEntrepreneurDTO.Id);
+
+                if (entrepreneur == null)
+                {
+                    response.Message = "no entrepreneurs located";
+                    return response;
+                }
+
+                entrepreneur.Name = editEntrepreneurDTO.Name;
+                entrepreneur.Surname = editEntrepreneurDTO.Surname;
+
+                _context.Update(entrepreneur);
+
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Entrepreneurs.ToListAsync();
+                response.Message = "Entrepreneur successfully edited";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
     }
 }

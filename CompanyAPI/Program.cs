@@ -1,6 +1,7 @@
 using CompanyAPI.Data;
-using CompanyAPI.Services.Entrepreneur;
 using Microsoft.EntityFrameworkCore;
+using CompanyAPI.Services.Entrepreneur;
+using CompanyAPI.Services.Company;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<IEntrepreneurInterface, EntrepreneurService>();
+builder.Services.AddScoped<ICompanyInterface, CompanyService>();
 
 var app = builder.Build();
 

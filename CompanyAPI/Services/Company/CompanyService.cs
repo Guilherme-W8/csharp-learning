@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CompanyAPI.Data;
 using CompanyAPI.DTO.Company;
 using CompanyAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CompanyAPI.Services.Company
 {
@@ -31,9 +32,31 @@ namespace CompanyAPI.Services.Company
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<CompanyModel>> FindCompanyById(int companyID)
+        public async Task<ResponseModel<CompanyModel>> FindCompanyById(int companyID)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<CompanyModel>();
+
+            try
+            {
+                var company = await _context.Companies.FirstOrDefaultAsync(companyDatabase => companyDatabase.Id == companyID);
+
+                if (company == null)
+                {
+                    response.Message = "No register returned";
+                    return response;
+                }
+
+                response.Data = company;
+                response.Message = "Company returned successfully";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public Task<ResponseModel<List<CompanyModel>>> ListCompanies()

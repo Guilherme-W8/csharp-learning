@@ -17,9 +17,41 @@ namespace CompanyAPI.Services.Company
             _context = context;
 
         }
-        public Task<ResponseModel<List<CompanyModel>>> CreateCompany(CreateCompanyDTO companyDTODTO)
+
+        public async Task<ResponseModel<List<CompanyModel>>> CreateCompany(CreateCompanyDTO companyDTO)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<CompanyModel>>();
+
+            try
+            {
+                var entrepreneur = await _context.Entrepreneurs
+                .FirstOrDefaultAsync(e => e.Id == companyDTO.Entrepreneur.Id);
+
+                if (entrepreneur == null)
+                {
+                    response.Message = "Entrepreneur register not found";
+                    return response;
+                }
+
+                var company = new CompanyModel()
+                {
+                    Name = companyDTO.Name,
+                    Industry = companyDTO.Industry,
+                    Entrepreneur = entrepreneur
+                };
+
+                _context.Add(company);
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Companies.Include(e => e.Entrepreneur).ToListAsync();
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public Task<ResponseModel<List<CompanyModel>>> EditCompany(EditCompanyDTO editCompanyDTO)
@@ -81,9 +113,24 @@ namespace CompanyAPI.Services.Company
             }
         }
 
-        public Task<ResponseModel<List<CompanyModel>>> ListCompanies()
+        public async Task<ResponseModel<List<CompanyModel>>> ListCompanies()
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<CompanyModel>>();
+
+            try
+            {
+                var companies = await _context.Companies.ToListAsync();
+                response.Data = companies;
+                response.Message = "All companies returned successfully";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public Task<ResponseModel<List<CompanyModel>>> RemoveCompany(int companyID)

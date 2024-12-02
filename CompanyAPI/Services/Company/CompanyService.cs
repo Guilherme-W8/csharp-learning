@@ -27,9 +27,31 @@ namespace CompanyAPI.Services.Company
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<CompanyModel>> FindCompanyByEntrepreneurId(int entrepreneurID)
+        public async Task<ResponseModel<List<CompanyModel>>> FindCompanyByEntrepreneurId(int entrepreneurID)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<CompanyModel>>();
+
+            try
+            {
+                var company = await _context.Companies.Include(e => e.Entrepreneur).Where(companyDatabase => companyDatabase.Entrepreneur.Id == entrepreneurID).ToListAsync();
+
+                if (company == null)
+                {
+                    response.Message = "No register returned";
+                    return response;
+                }
+
+                response.Data = company;
+                response.Message = "Companies successfully returned";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public async Task<ResponseModel<CompanyModel>> FindCompanyById(int companyID)

@@ -11,7 +11,7 @@ namespace CompanyAPI.Services.Company
     {
         Task<ResponseModel<List<CompanyModel>>> ListCompanies();
         Task<ResponseModel<CompanyModel>> FindCompanyById(int companyID);
-        Task<ResponseModel<CompanyModel>> FindCompanyByEntrepreneurId(int entrepreneurID);
+        Task<ResponseModel<List<CompanyModel>>> FindCompanyByEntrepreneurId(int entrepreneurID);
         Task<ResponseModel<List<CompanyModel>>> CreateCompany(CreateCompanyDTO companyDTODTO);
         Task<ResponseModel<List<CompanyModel>>> EditCompany(EditCompanyDTO editCompanyDTO);
         Task<ResponseModel<List<CompanyModel>>> RemoveCompany(int companyID);

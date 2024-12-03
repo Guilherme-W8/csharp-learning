@@ -54,9 +54,48 @@ namespace CompanyAPI.Services.Company
             }
         }
 
-        public Task<ResponseModel<List<CompanyModel>>> EditCompany(EditCompanyDTO editCompanyDTO)
+        public async Task<ResponseModel<List<CompanyModel>>> EditCompany(EditCompanyDTO editCompanyDTO)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<CompanyModel>>();
+
+            try
+            {
+                var company = await _context.Companies
+                .Include(e => e.Entrepreneur)
+                .FirstOrDefaultAsync(c => c.Id == editCompanyDTO.Id);
+
+                var entrepreneur = await _context.Entrepreneurs
+                .FirstOrDefaultAsync(e => e.Id == editCompanyDTO.Entrepreneur.Id);
+
+                if (company == null)
+                {
+                    response.Message = "Company register not found";
+                    return response;
+                }
+
+                if (entrepreneur == null)
+                {
+                    response.Message = "Entrepreneur register not found";
+                    return response;
+                }
+
+                company.Name = editCompanyDTO.Name;
+                company.Industry = editCompanyDTO.Industry;
+                company.Entrepreneur = entrepreneur;
+
+                _context.Update(company);
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Companies.ToListAsync();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
 
         public async Task<ResponseModel<List<CompanyModel>>> FindCompanyByEntrepreneurId(int entrepreneurID)

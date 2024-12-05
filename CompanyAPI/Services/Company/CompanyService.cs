@@ -131,7 +131,9 @@ namespace CompanyAPI.Services.Company
 
             try
             {
-                var company = await _context.Companies.FirstOrDefaultAsync(companyDatabase => companyDatabase.Id == companyID);
+                var company = await _context.Companies
+                .Include(c => c.Entrepreneur)
+                .FirstOrDefaultAsync(companyDatabase => companyDatabase.Id == companyID);
 
                 if (company == null)
                 {
@@ -158,7 +160,7 @@ namespace CompanyAPI.Services.Company
 
             try
             {
-                var companies = await _context.Companies.ToListAsync();
+                var companies = await _context.Companies.Include(c => c.Entrepreneur).ToListAsync();
                 response.Data = companies;
                 response.Message = "All companies returned successfully";
 
@@ -179,6 +181,7 @@ namespace CompanyAPI.Services.Company
             try
             {
                 var company = await _context.Companies
+                .Include(c => c.Entrepreneur)
                 .FirstOrDefaultAsync(c => c.Id == companyID);
 
                 if (company == null)

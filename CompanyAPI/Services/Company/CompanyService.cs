@@ -172,9 +172,35 @@ namespace CompanyAPI.Services.Company
             }
         }
 
-        public Task<ResponseModel<List<CompanyModel>>> RemoveCompany(int companyID)
+        public async Task<ResponseModel<List<CompanyModel>>> RemoveCompany(int companyID)
         {
-            throw new NotImplementedException();
+            var response = new ResponseModel<List<CompanyModel>>();
+
+            try
+            {
+                var company = await _context.Companies
+                .FirstOrDefaultAsync(c => c.Id == companyID);
+
+                if (company == null)
+                {
+                    response.Message = "no company located";
+                    return response;
+                }
+
+                _context.Remove(company);
+                await _context.SaveChangesAsync();
+
+                response.Data = await _context.Companies.ToListAsync();
+                response.Message = "Entrepreneur successfully removed";
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                response.Status = false;
+                return response;
+            }
         }
     }
 }
